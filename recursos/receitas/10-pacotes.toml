@@ -1,0 +1,64 @@
+[modulo]
+id = "10"
+nome = "pacotes"
+titulo = "Tema, icones e fontes do repositorio Debian"
+nucleo = true
+afetada_por = ["icones", "fonte", "barra_tarefas"]
+
+[[passo]]
+tipo = "comando"
+dizer = "atualizando o indice do apt"
+root = true
+tolera_falha = true
+argumentos = ["apt-get", "update"]
+
+# guarda e devolve a barra inteira, com os arquivos dos plugins; a receita da
+# barra guarda a de antes com ele, e o desfazer carrega de volta
+[[passo]]
+tipo = "apt"
+dizer = "o que guarda e devolve a barra"
+pacotes = ["xfce4-panel-profiles"]
+
+[[passo]]
+tipo = "apt"
+dizer = "tema das janelas"
+pacotes = ["orchis-gtk-theme"]
+
+[[passo]]
+tipo = "apt"
+se = "icones == papirus"
+dizer = "icones Papirus"
+pacotes = ["papirus-icon-theme"]
+
+[[passo]]
+tipo = "apt"
+se = "icones == numix"
+dizer = "icones Numix"
+pacotes = ["numix-icon-theme"]
+
+[[passo]]
+tipo = "apt"
+se = "fonte == inter"
+pacotes = ["fonts-inter"]
+
+[[passo]]
+tipo = "apt"
+se = "fonte == cantarell"
+pacotes = ["fonts-cantarell"]
+
+[[passo]]
+tipo = "apt"
+se = "barra_tarefas == docklike"
+dizer = "barra de tarefas docklike"
+pacotes = ["xfce4-docklike-plugin"]
+
+# o menu Whisker e o que a barra usa no canto esquerdo
+[[passo]]
+tipo = "apt"
+se = "menu != nenhum"
+pacotes = ["xfce4-whiskermenu-plugin"]
+
+[[passo]]
+tipo = "apt"
+dizer = "o que desenha o papel de parede"
+pacotes = ["imagemagick"]
