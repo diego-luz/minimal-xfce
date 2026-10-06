@@ -58,6 +58,9 @@ RELOGIO = {
 
 PAPEIS_DIR = Path.home() / ".local/share/backgrounds/minimal"
 
+# fora da pasta pessoal as receitas nao criam nada; o desfazer nao apaga la
+APAGAVEIS_FORA_DE_CASA: set[str] = set()
+
 
 def contexto(cfg: dict[str, str]) -> dict[str, str]:
     escuro = cfg.get("modo", "escuro") == "escuro"
