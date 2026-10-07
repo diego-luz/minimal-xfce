@@ -38,6 +38,10 @@ python3 -m d3bian_init_minimal_xfce        # pede a senha uma vez e abre o paine
 - **Área de trabalho** sem ícones, com papel de parede liso ou em degradê
   desenhado na hora pelo ImageMagick, em tons discretos
 - **Encaixe de janelas** por atalho, bordas mais largas, e nova janela e nova aba no clique direito do terminal
+- **Barra em ilhas**, se quiser: barra fina solta no topo e as janelas abertas numa
+  ilha embaixo, com cantos redondos (vinda do [oasis-xfce](https://git.saberdl.dev.br/d3bian-temas/oasis-xfce))
+- **Efeitos com o picom**, se quiser: sombras, cantos redondos e desfoque, em modo
+  leve onde não há aceleração de vídeo
 - **Programas úteis**: uma lista pronta do repositório oficial do Debian, conforme o hardware
 - **Voltar ao que era antes** com o diário de alterações do [modelo](https://git.saberdl.dev.br/d3bian-temas/modelo)
 
@@ -47,6 +51,10 @@ python3 -m d3bian_init_minimal_xfce        # pede a senha uma vez e abre o paine
 | Com outras opções da página | Mais uma combinação de opções |
 |---|---|
 | ![Com outras opções da página](docs/imagens/resultado-opcao.jpg) | ![Mais uma combinação de opções](docs/imagens/resultado-opcao2.jpg) |
+
+| Barra em ilhas, com o picom (`barra = ilhas`, `efeitos = desfoque`) |
+|---|
+| ![Barra em ilhas, com o picom](docs/imagens/resultado-ilhas.jpg) |
 
 | Início | Opções | Programas úteis |
 |---|---|---|

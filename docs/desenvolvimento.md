@@ -11,14 +11,34 @@ os detalhes deles e as armadilhas conhecidas estão em [nucleo.md](nucleo.md).
 | id | nome | afetada por |
 |---|---|---|
 | 00 | backup (arquivos e a barra de antes) | |
-| 10 | pacotes | `icones`, `fonte`, `barra_tarefas` |
+| 10 | pacotes | `efeitos`, `icones`, `fonte`, `barra_tarefas` |
 | 20 | aparência (tema, ícones, fonte, janelas) | `modo`, `compacto`, `icones`, `fonte` |
-| 30 | barra | `barra`, `barra_tarefas`, `relogio`, `menu`, `modo` |
+| 30 | barra (única ou em ilhas) | `barra`, `barra_tarefas`, `relogio`, `menu`, `modo` |
 | 35 | janelas (encaixe, bordas e atalhos) | `janelas`, `modo`, `compacto` |
 | 36 | novo terminal no clique direito | |
 | 40 | papel de parede e área de trabalho | `papel`, `cor_papel`, `icones_area` |
+| 50 | efeitos (picom) | `efeitos`, `barra` |
 
 Nomes de tema, ícones, cores do papel e formato do relógio ficam no `projeto.py`.
+
+## Ilhas, picom e encaixe
+
+Vindos do [oasis-xfce](https://git.saberdl.dev.br/d3bian-temas/oasis-xfce), com os
+mesmos arquivos em `recursos/arquivos`:
+
+| Arquivo | O que faz |
+|---|---|
+| `paineis.py`, `tela.py` | montam o perfil das ilhas (`xfce4-panel-profiles load`) e dizem as margens do xfwm4, já na escala do Xfce |
+| `picom.conf`, `picom.sh` | o modelo do picom e o `d3bian-picom`, que inicia e para só o picom do projeto e religa o compositor do xfwm4 se ele cair |
+| `janelas.sh`, `layouts.py`, `bordas.py` | encaixe, layouts e bordas; descontam as margens do xfwm4 da área útil (o `_NET_WORKAREA` não conta painel solto) |
+
+Painel solto da borda só existe na posição livre (`p=0`), em que `x` e `y` são o
+centro do painel; por isso a ilha de baixo cresce com o dock (`length-adjust`) e
+fica sempre no centro. Os cantos vêm de um bloco no `gtk.css`
+(`#XfcePanelWindow { border-radius: 14px }`); o picom usa o mesmo raio. Comandos
+com o caminho da pasta pessoal levam aspas: no `Exec` do autostart, as da
+especificação do `.desktop` (`exec_desktop`); nos atalhos de teclado, aspas simples
+de shell.
 
 ## Imagens de exemplo
 
