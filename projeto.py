@@ -18,6 +18,8 @@ import subprocess
 from pathlib import Path
 from typing import Callable
 
+from . import caminhos
+
 # opcao -> (nome do tema no /usr/share/themes, claro e escuro)
 # o pacote orchis-gtk-theme do Debian traz Orchis, Orchis-Light, Orchis-Dark e
 # as variantes -Compact; nao traz cores de destaque
@@ -74,8 +76,22 @@ RAIO = 14
 # programas fixados no dock da ilha de baixo, na ordem; so entram os que existem
 FAVORITOS = ["thunar", "xfce4-terminal", "firefox-esr", "firefox", "org.xfce.mousepad"]
 
-# fora da pasta pessoal as receitas nao criam nada; o desfazer nao apaga la
-APAGAVEIS_FORA_DE_CASA: set[str] = set()
+# Tela de login (trazida do oasis): o lightdm nao le a pasta pessoal (no
+# Debian ela e fechada), entao o fundo, a foto e o tema vao para o sistema
+LOGIN_RAIZ = "/usr/share/backgrounds/d3bian-minimal"
+LOGIN_TEMA = "/usr/share/themes/d3bian-minimal-login"
+LOGIN_GREETER = "/etc/xdg/lightdm/lightdm-gtk-greeter.conf.d/90-d3bian-minimal.conf"
+LOGIN_LIGHTDM = "/etc/lightdm/lightdm.conf.d/90-d3bian-minimal.conf"
+# a imagem que a pagina de ajustes guarda para o fundo do login
+LOGIN_PROPRIA = PAPEIS_DIR / "login-propria.jpg"
+
+# Fora da pasta pessoal, o desfazer so apaga o que estiver aqui: o que a
+# receita da tela de login cria
+APAGAVEIS_FORA_DE_CASA: set[str] = {LOGIN_RAIZ, LOGIN_TEMA, LOGIN_GREETER, LOGIN_LIGHTDM}
+
+# Arquivo de sistema que as receitas alteram: so os da tela de login, que
+# podem existir de uma instalacao anterior
+RESTAURAVEIS_FORA_DE_CASA: set[str] = {LOGIN_GREETER, LOGIN_LIGHTDM}
 
 
 def exec_desktop(*argumentos: str) -> str:
@@ -228,11 +244,59 @@ def contexto(cfg: dict[str, str]) -> dict[str, str]:
         "ilha_fundo": "0.20 0.21 0.23 0.90" if escuro else "0.98 0.98 0.98 0.88",
         "painel_hover": "rgba(255, 255, 255, 0.10)" if escuro else "rgba(0, 0, 0, 0.07)",
         "destaque_cor": DESTAQUE,
+        "destaque_texto": "#ffffff",
         "destaque_suave": f"rgba({dr}, {dg}, {db}, 0.22)",
         "favoritos": ";".join(FAVORITOS),
     }
     ctx.update(_picom(cfg))
+    ctx.update(_login(cfg, ctx))
     return ctx
+
+
+def _imagem_propria() -> Path | None:
+    """A imagem escolhida na pagina; sem ela, login.jpg, .jpeg ou .png na
+    pasta de imagens da pessoa."""
+    if LOGIN_PROPRIA.is_file():
+        return LOGIN_PROPRIA
+    try:
+        pasta = subprocess.run(["xdg-user-dir", "PICTURES"], capture_output=True,
+                               text=True, timeout=5).stdout.strip()
+    except (OSError, subprocess.TimeoutExpired):
+        pasta = ""
+    for base in [Path(pasta)] if pasta else [Path.home() / "Imagens", Path.home() / "Pictures"]:
+        for nome in ("login.jpg", "login.jpeg", "login.png", "login.JPG", "login.PNG"):
+            if (base / nome).is_file():
+                return base / nome
+    return None
+
+
+def _login(cfg: dict[str, str], ctx: dict[str, str]) -> dict[str, str]:
+    """O que a receita da tela de login precisa."""
+    # os campos sao de vidro claro sobre a foto: o tema por baixo e sempre o escuro
+    base = Path("/usr/share/themes/Orchis-Dark/gtk-3.0/gtk.css")
+    face = Path.home() / ".face"
+    avatar = face if face.is_file() else caminhos.ARQUIVOS / "logos" / "debian-claro.svg"
+    # de onde vem o fundo: o papel da area de trabalho (com "manter", o que o
+    # xfdesktop mostra; a receita procura) ou a imagem escolhida na pagina
+    fundo = ""
+    if cfg.get("login_fundo", "papel") == "propria":
+        fundo = str(_imagem_propria() or "")
+    elif cfg.get("papel", "degrade") != "manter":
+        fundo = ctx["papel_arquivo"]
+    return {
+        # montagem numa pasta da pessoa, fechada; o root copia de la
+        "login_dir": str(caminhos.ESTADO_DIR / "login"),
+        "login_raiz": LOGIN_RAIZ,
+        "login_tema_dir": LOGIN_TEMA,
+        "login_greeter_conf": LOGIN_GREETER,
+        "login_lightdm_conf": LOGIN_LIGHTDM,
+        "login_tema_base": str(base) if base.is_file() else "",
+        "login_fundo_arquivo": fundo,
+        "login_avatar_arquivo": str(avatar),
+        "login_esconder_usuarios": "false" if cfg.get("login_usuarios") == "lista" else "true",
+        # icones claros sobre a foto escurecida; o Adwaita sempre existe
+        "login_icones": ICONES.get(cfg.get("icones", ""), ICONES["papirus"])[1],
+    }
 
 
 def verificacoes(add: Callable[..., None]) -> None:
