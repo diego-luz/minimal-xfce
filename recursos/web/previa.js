@@ -145,6 +145,11 @@ const Previa = (() => {
     const fundo = el("div", "pv-login-fundo" + (e.login_desfoque !== "nao" ? " desfocado" : ""));
     pintarFundo(fundo, fundoLoginDe(e), e.login_fundo === "propria"
       ? "escolha uma imagem nos ajustes" : "papel de parede atual");
+    // o mesmo escurecimento que a receita aplica (colorize de preto)
+    const borrado = e.login_desfoque !== "nao";
+    const esc = e.login_escurecer && e.login_escurecer !== "auto"
+      ? Math.min(90, parseInt(e.login_escurecer, 10) || 0) : (borrado ? 18 : 12);
+    fundo.style.filter = (borrado ? "blur(6px) " : "") + `brightness(${1 - esc / 100})`;
     const topo = el("div", "pv-login-topo", "qui 08 out  10:40  ⏻");
     const meio = el("div", "pv-login-meio");
     meio.appendChild(el("div", "pv-foto"));
