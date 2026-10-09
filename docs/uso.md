@@ -7,7 +7,7 @@
 Clone com o nome da pasta igual ao do pacote Python (com `_`) e rode como módulo:
 
 ```sh
-git clone https://git.saberdl.dev.br/d3bian-temas/minimal-xfce.git d3bian_init_minimal_xfce
+git clone https://github.com/diego-luz/minimal-xfce.git d3bian_init_minimal_xfce
 python3 -m d3bian_init_minimal_xfce            # pede a senha uma vez e abre o painel
 python3 -m d3bian_init_minimal_xfce aplicar --simular
 ```
@@ -45,7 +45,7 @@ oficial do Debian, mostrando só o que serve para o hardware encontrado.
 
 Os padrões deixam o visual de sempre: barra no topo e efeitos desligados (o
 compositor do próprio Xfce). As ilhas e o picom vêm do
-[oasis-xfce](https://git.saberdl.dev.br/d3bian-temas/oasis-xfce).
+[oasis-xfce](https://github.com/diego-luz/oasis-xfce).
 
 ## Barra em ilhas
 
