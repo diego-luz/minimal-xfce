@@ -25,6 +25,29 @@ python3 -m d3bian_init_minimal_xfce        # pede a senha uma vez e abre o paine
   <img src="docs/imagens/resultado-instalado.jpg" alt="Logo depois de instalar, com as opções padrão" width="820">
 </div>
 
+<details>
+<summary><b>In English</b></summary>
+
+A local control panel, opened in your browser, that makes Xfce on Debian
+**minimal, using only what is in the repository**: Orchis theme, Papirus icons,
+Inter font, a single top bar with grouped window icons, a clean desktop and a plain
+or gradient wallpaper drawn on the fly. Optional island-style panels and picom
+effects.
+
+- **Official Debian packages only**: nothing is cloned, downloaded or compiled.
+- **Safe to try**: every change is backed up and journaled; *Restore* puts your
+  desktop back the way it was.
+- **Python standard library only**: no pip, nothing to build.
+
+```sh
+git clone https://github.com/diego-luz/minimal-xfce.git d3bian_init_minimal_xfce
+python3 -m d3bian_init_minimal_xfce        # asks for your password once, opens the panel
+```
+
+The interface and the documentation are in Brazilian Portuguese.
+
+</details>
+
 ---
 
 ## O que ele faz
